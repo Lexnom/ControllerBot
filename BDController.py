@@ -93,3 +93,18 @@ def select_user_name_bot(token):
             return result
     except Error as e:
         print(e)
+
+def select_name_public(id):
+    try:
+        con = mysql.connector.connect(host=config.ip_db,
+                                      database=config.name_bd,
+                                      user=config.user_db,
+                                      password=config.pas_db)
+        if con.is_connected():
+            cursor = con.cursor()
+            query = "SELECT pb.name FROM client_public pb WHERE pb.id_client='%s'" % id
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
+    except Error as e:
+        print(e)

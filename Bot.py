@@ -53,7 +53,13 @@ async def add_channel_bot(message: types.Message):
 
 @dp.message_handler(commands=['mychannels'])
 async def channel_bot(message: types.Message):
-    pass
+    result = BDController.select_name_public(message.from_user.id)
+    if len(result)>0:
+        pass
+    else:
+        inline_add_channel_mp = InlineKeyboardMarkup(row_width=1)
+        inline_add_channel_mp.add(InlineKeyboardButton('Добавить канал', callback_data='add_channel'))
+        await message.reply('Управление каналами\n Вы не добавили ни одного канала.', reply_markup=inline_add_channel_mp, reply=False)
 
 
 @dp.message_handler(commands=['settings'])
@@ -111,7 +117,9 @@ async def back_select_bot(callback: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id, reply_markup=inline_menu_bot(callback.from_user.id), text=config.select_bot)
 
 
-
+@dp.callback_query_handler(lambda c: c.data == 'add_channel')
+async def add_channel_bot(callback: types.CallbackQuery):
+    await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id, reply_markup=inline_menu_bot(callback.from_user.id), text=config.select_bot)
 
 
 if __name__ == '__main__':
